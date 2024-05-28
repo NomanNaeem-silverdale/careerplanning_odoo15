@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--TREEEE VIEW-->
+<odoo>
+    <record id="view_employee_profile_search" model="ir.ui.view">
+        <field name="name">employee.profile.search</field>
+        <field name="model">employee.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <!--  below filter domain make us to search across multiple columns-->
+                <field name="name" string="Employee Name"
+                       filter_domain="[('name','ilike',self)"/>
+                <field name="gender" string="Gender"/>
+                <field name="age"/>
+                <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+                <filter name="filter_female" string="Female" domain="[('gender','=','female')]"/>
+                <separator/>
+                <!--                <filter name="filter_kids" string="Kids" domain="[('age','&lt;=','11')]"/>-->
+                <group expand="0" string="Group By">
+                    <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                </group>
+                <searchpanel>
+                    <field name="gender" string="Gender" enable_counters="1" icon="fa-users" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+    <record id="view_employee_profile_tree" model="ir.ui.view">
+        <field name="name">employee.profile.tree</field>
+        <field name="model">employee.profile</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="name" optional="show"/>
+                <field name="gender" decoration-it="1" decoration-success="gender=='female'" optional="show"/>
+                <field name="job_title" optional="show"/>
+                <!--                <field name="department"/>-->
+                <field name="email" widget="email" optional="show"/>
+                <field name="phone_number" widget="phone"/>
+                <field name="address"/>
+                <field name="joining_date"/>
+                <field name="date_of_birth"/>
+                <field name="education"/>
+                <field name="skill_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="goal_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </tree>
+        </field>
+    </record>
+    <!--FORMMM VIEW-->
+    <record id="view_employee_profile_form" model="ir.ui.view">
+        <field name="name">employee.profile.form</field>
+        <field name="model">employee.profile</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div>
+                        <h1>Employee</h1>
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_employee_feedback)d" type="action" class="oe_stat_button" icon="fa-user"
+                                string="Employee Feedback">
+                            <field name="name" widget="statinfo"/>
+                        </button>
+                        <!--                        <button name="action_view_card" type="object" class="oe_stat_button"-->
+                        <!--                                icon="fa-cc-mastercard">-->
+
+                        <!--                            <field string="Cards" name="card_count" widget="statinfo"/>-->
+                        <!--                        </button>-->
+                    </div>
+                    <!--                    <div class="oe_button_box" name="button_box">-->
+
+                    <!--                        <button name="%(action_employee_feedback)d" string="FeedBack"-->
+                    <!--                                class="oe_stat_button" type="action" icon="fa-cc-mastercard"/>-->
+                    <!--                    </div>-->
+                    <div class="oe_title">
+                        <h1>
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group string="Employee Form">
+                        <field name="image" widget="image" class="oe_avatar"/>
+
+                        <group string="Personal Information">
+                            <field name="name"/>
+                            <field name="address"/>
+                            <field name="gender"/>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+                        </group>
+                        <group string="Contact Information">
+                            <field name="email" widget="email"/>
+                            <field name="phone_number" widget="phone"/>
+                            <field name="address"/>
+                        </group>
+                        <group string="Career Information">
+                            <field name="job_title"/>
+                            <field name="joining_date"/>
+                            <field name="education"/>
+                            <field name="skill_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="goal_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Course" name="Course">
+                            <group>
+
+                                <field name="course_id" class="oe_inline"/>
+                            </group>
+                        </page>
+                        <page string="Jobs" name="Jobs">
+                            <group>
+                                <field name="job_id"/>
+                                <field name="job_title"/>
+                            </group>
+                        </page>
+                        <page string="Department" name="Department">
+                            <group>
+
+                                <field name="department_id"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <!--                adding chatter here -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--KANBAN VIEW-->
+
+    <record id="view_employee_profile_kanban" model="ir.ui.view">
+        <field name="name">employee.profile.kanban</field>
+        <field name="model">employee.profile</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban">
+                <field name="id"/>
+                <field name="name"/>
+
+                <!--                <field name="email"/>-->
+                <!--                <field name="phone_number"/>-->
+                <templates>
+                    <t t-name="kanban-box">
+                        <!--                        <t t-set="spayedorneutered" t-value="record.spayorneuter.raw_value"/>-->
+                        <!--                        <t t-set="aggressive" t-value="record.aggressive.raw_value"/>-->
+                        <!--                        <t t-set="specialdiet" t-value="record.specialdiet.raw_value"/>-->
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_image" style="border: 1px solid black;">
+                                <img alt="Animal"
+                                     t-att-src="kanban_image('employee.profile','image',record.id.raw_value)"
+                                     style="width: 80px; height: 80px; object-fit: cover;"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <ul>
+
+
+                                    <li class="mb4">
+                                        <h3>
+                                            <field name="name"/>
+                                        </h3>
+                                    </li>
+                                    <li class="float-right mb4">
+
+                                        <strong>Skill:</strong>
+
+                                        <field name="skill_id" options="{'color_field': 'color'}"/>
+
+                                    </li>
+                                    <li>
+
+                                        <strong>Department:</strong>
+                                        <field name="department_id" options="{'color_field': 'color'}"/>
+
+                                    </li>
+                                    <li>
+
+                                        <strong>Job:</strong>
+
+                                        <field name="job_title"/>
+
+
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_employee_profile_activity" model="ir.ui.view">
+        <field name="name">employee.profile.activity</field>
+        <field name="model">employee.profile</field>
+        <field name="arch" type="xml">
+            <activity string="Employees">
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('employee.profile', 'avatar_128', record.id.raw_value)"
+                             role="img"
+                             t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div>
+                            <field name="name" display="full"/>
+                            <field name="job_id" muted="1" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_employee_profile_graph1">
+        <field name="name">employee.profile.graph</field>
+        <field name="model">employee.profile</field>
+        <field name="arch" type="xml">
+            <graph string="Cases By Stage and Estimates" sample="1">
+                <field name="job_id"/>
+            </graph>
+        </field>
+    </record>
+
+
+    <!--ACTION    -->
+    <record id="action_employee_profile" model="ir.actions.act_window">
+        <field name="name">Employee</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">employee.profile</field>
+        <field name="view_mode">kanban,tree,graph,activity,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Employee!
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_employee_profile"
+              name="Employee Profile"
+              action="action_employee_profile"
+              parent="menu_employee_plan_root"
+    />
+
+</odoo>
